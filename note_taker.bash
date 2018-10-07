@@ -100,7 +100,7 @@ handle_options () {
               #Assign the penultimate line number to the LINE_NUMBER variable
               LINE_NUMBER=$LINES
               #Get the text of the penultimate line and assign it ti LINE_TEXT
-              LINE_TEXT=`tail -n +"$LINE_NUMBER" "NOTE_PAD_PATH" | head -n 1`
+              LINE_TEXT=`tail -n +"$LINE_NUMBER" "$NOTE_PAD_PATH" | head -n 1`
               #As long as LINE_TEXT is not empty and the LINE_NUMBER is not 0
               until [ -z "$LINE_TEXT" ] || [ "$LINE_NUMBER" -eq 0 ]; do
                   #Delete the last line of the notes file by copying a shortened
