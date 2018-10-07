@@ -85,6 +85,52 @@ handle_options () {
             fi
             echo ""
             ;;
+
+        "-u")
+            # -u for undo: deletes last note
+            read -p "Delete last note [y/n]? " -n 1 -r CLEAR_REPLY
+            echo ""
+            if [[ ! "$CLEAR_REPLY" =~ ^[Yy]$ ]]; then
+              echo "Cancelled."
+              ;;
+            else
+              #Clear last note in file:
+
+              #Get the last non-blank line in the notes file
+              LINE_NUMBER = `(wc -l "$NOTE_PAD_PATH") - 1`
+              #Copy the text of the last non-blank file to a variable
+              LINE_TEXT = `sed -ne '$LINE_NUMBER{p;q;}' "$NOTE_PAD_PATH"`
+              #As long as the variable holding the last line is not blank:
+              until [ -z "$LINE_TEXT" ]; do
+                #Delete the last line of the notepad file
+                sed -i '$ d' "$NOTE_PAD_PATH"
+                #Decrement the line number variable
+                (($LINE_NUMBER--))
+                #Get the text of the new last line
+                LINE_TEXT = `sed -ne '$LINE_NUMBER{p;q;}' "$NOTE_PAD_PATH"`
+            done
+
+
+
+
+            fi
+            echo ""
+            ;;
+
+        "-c")
+            # -c for clear notes
+            read -p "Clear all notes [y/n]? " -n 1 -r CLEAR_REPLY
+            echo ""
+            if [[ ! "$CLEAR_REPLY" =~ ^[Yy]$ ]]; then
+              echo "Cancelled."
+              ;;
+            else
+              #Clear notes file:
+              echo "" > "$NOTE_PAD_PATH"
+            fi
+            echo ""
+            ;;
+
         *)
             return
             ;;
