@@ -110,7 +110,7 @@ handle_options () {
                   #Decrement the current line number variable
                   ((LINE_NUMBER--))
                   #Get the text of the current last line
-                  LINE_TEXT = `tail -n +"$LINE_NUMBER" "$NOTE_PAD_PATH" | head -n 1`
+                  LINE_TEXT=`tail -n +"$LINE_NUMBER" "$NOTE_PAD_PATH" | head -n 1`
               done
               #Outsde of out loop we need to delet one more line to complete the
               #clear
