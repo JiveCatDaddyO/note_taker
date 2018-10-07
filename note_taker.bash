@@ -95,18 +95,18 @@ handle_options () {
             else
               #Clear last note in file:
               #Get the last non-blank line in the notes file
-              LINE_NUMBER = (wc -l "$NOTE_PAD_PATH") - 1
+              LINE_NUMBER = tail -2 "$NOTE_PAD_PATH" | head -1
               #Copy the text of the last non-blank file to a variable
-              LINE_TEXT = tail -n +$LINE_NUMBER "$NOTE_PAD_PATH" | head -n 1
+              LINE_TEXT = tail -n +"$LINE_NUMBER" "$NOTE_PAD_PATH" | head -n 1
               #As long as the variable holding the last line is not blank:
               until [ -z "$LINE_TEXT" ]; do
                 #Delete the last line of the notepad file
                 head -n -1 "$NOTE_PAD_PATH" > temp.txt
                 mv temp.txt "$NOTE_PAD_PATH"
                 #Decrement the line number variable
-                LINE_NUMBER = (wc -l "$NOTE_PAD_PATH")
+                LINE_NUMBER = tail -2 "$NOTE_PAD_PATH" | head -1
                 #Get the text of the new last line
-                LINE_TEXT = tail -n +$LINE_NUMBER "$NOTE_PAD_PATH" | head -n 1
+                LINE_TEXT = tail -n +"$LINE_NUMBER" "$NOTE_PAD_PATH" | head -n 1
               done
               rm temp.txt
             fi
