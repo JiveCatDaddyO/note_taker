@@ -50,6 +50,10 @@ testing () {
 #######################################
 handle_options () {
     case "$1" in
+        "-a")
+            # -a for all
+            cat "$NOTE_PAD_PATH" | less
+            ;;
         "-p")
             # -p for paste
             printf "\n" >> "$NOTE_PAD_PATH"
@@ -88,7 +92,7 @@ handle_options () {
 
         "-u")
             # -u for undo: deletes last note
-            read -p "Delete most recent note [y/n]? " -n 1 -r CLEAR_REPLY
+            read -p "Clear most recent note [y/n]? " -n 1 -r CLEAR_REPLY
             echo ""
             if [[ ! "$CLEAR_REPLY" =~ ^[Yy]$ ]]; then
               echo "Cancelled."
@@ -99,26 +103,27 @@ handle_options () {
               ((LINES--))
               #Assign the penultimate line number to the LINE_NUMBER variable
               LINE_NUMBER=$LINES
-              #Get the text of the penultimate line and assign it ti LINE_TEXT
+              #Get the text of the penultimate line and assign it to LINE_TEXT
               LINE_TEXT=`tail -n +"$LINE_NUMBER" "$NOTE_PAD_PATH" | head -n 1`
-              #As long as LINE_TEXT is not empty and the LINE_NUMBER is not 0
+              #As long as LINE_TEXT is not empty and LINE_NUMBER is not 0
               until [ -z "$LINE_TEXT" ] || [ "$LINE_NUMBER" -eq 0 ]; do
                   #Delete the last line of the notes file by copying a shortened
                   #version to a temp file and then overwriting the original
+                  #with the temp
                   head -n -1 "$NOTE_PAD_PATH" > temp.txt
                   mv temp.txt "$NOTE_PAD_PATH"
                   #Decrement the current line number variable
                   ((LINE_NUMBER--))
-                  #Get the text of the current last line
+                  #Get the text of the new last line
                   LINE_TEXT=`tail -n +"$LINE_NUMBER" "$NOTE_PAD_PATH" | head -n 1`
               done
-              #Outsde of out loop we need to delet one more line to complete the
-              #clear
+              #Outsde of out loop we need to delete one more line to complete the
+              #clear process
               head -n -1 "$NOTE_PAD_PATH" > temp.txt
               mv temp.txt "$NOTE_PAD_PATH"
+              #Report success
+              echo "Cleared."
             fi
-            #Report success
-            echo "Deleted most recent note."
             echo ""
             ;;
 
@@ -127,17 +132,17 @@ handle_options () {
             #Confirm user intention
             read -p "Clear all notes [y/n]? " -n 1 -r CLEAR_REPLY
             echo ""
-            #Bail if they don't say yesy
+            #Exit if they don't say yes
             if [[ ! "$CLEAR_REPLY" =~ ^[Yy]$ ]]; then
               echo "Cancelled."
             else
               #Clear notes file by overwriting it with blankness:
               > "$NOTE_PAD_PATH"
+              #Report success
+              echo "Cleared."
             fi
-            echo "All notes cleared."
             echo ""
             ;;
-
         *)
             return
             ;;
